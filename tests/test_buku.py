@@ -20,4 +20,5 @@ def test_create_buku_berhasil():
     mock_cursor.execute.assert_called_once()
     # Memverifikasi apakah perintah commit (simpan) dipanggil
     model.conn.commit.assert_called_once()
+
     
