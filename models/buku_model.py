@@ -1,6 +1,7 @@
 
 from config.database import Database
 
+
 class BukuModel:
     def __init__(self):
         self.db = Database()
@@ -52,7 +53,7 @@ class BukuModel:
                 if cursor:
                     cursor.close()
         return False
-    
+
     def update_buku(self, id_buku, judul, penulis, tahun_terbit):
         if self.conn:
             cursor = None
@@ -83,7 +84,7 @@ class BukuModel:
         return False
 
 
-
 if __name__ == "__main__":
     buku = BukuModel()
     print(buku.get_all_buku())
+

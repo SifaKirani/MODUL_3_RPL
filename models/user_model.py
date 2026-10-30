@@ -1,6 +1,8 @@
-#Sifa_007
+
+# Sifa_007
 import hashlib
 from config.database import Database
+
 
 class UserModel:
     def __init__(self):
@@ -19,9 +21,40 @@ class UserModel:
             password_hash = self.hash_password(password)
 
             # Parameterized Query untuk mencegah SQL Injection
-            query = f"SELECT id_user, username, role FROM {self.table_name} WHERE username = %s AND password = %s"
+            query = f"""
+                SELECT id_user, username, role
+                FROM {self.table_name}
+                WHERE username = %s AND password = %s
+            """
             cursor.execute(query, (username, password_hash))
-            user = cursor. fetchone()
+            user = cursor.fetchone()
             cursor.close()
             return user
         return None
+#SIFA_007
+    # TAMBAHAN: Registrasi pengguna
+    def register_user(self, username, password, role):
+        password_hash = self.hash_password(password)
+        if self.conn:
+            cursor = None
+            try:
+                cursor = self.conn.cursor()
+                query = f"""
+                    INSERT INTO {self.table_name}
+                    (username, password, role)
+                    VALUES (%s, %s, %s)
+                """
+                cursor.execute(
+                    query,
+                    (username, password_hash, role)
+                )
+                self.conn.commit()
+                return True
+            except Exception as e:
+                print("Gagal registrasi:", e)
+                self.conn.rollback()
+                return False
+            finally:
+                if cursor:
+                    cursor.close()
+        return False

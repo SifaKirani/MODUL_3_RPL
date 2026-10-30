@@ -1,5 +1,5 @@
 name: Python CI Pipeline - Sistem Perpustakaan
-# Pipeline akan berjalan otomatis saat ada push atau pull request ke branch main
+
 on:
   push:
     branches: [ "main" ]
@@ -11,19 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 1. Mengambil Kode dari Repositori (Checkout)
+      - name: 1. Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 2. Menyiapkan Lingkungan Python 3.11
+      - name: 2. Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: 3. Menginstal Dependensi Proyek
+      - name: 3. Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 4. Menjalankan Automated Unit Testing (Pytest)
-        run: |
-          python -m pytest -v
+      - name: 4. Check Code Quality with Flake8
+        run: flake8 models/ controllers/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: 5. Run Automated Unit Testing
+        run: python -m pytest -v
